@@ -1,9 +1,13 @@
-var virtualNetworkName =
-var location
+//Azure Virtual Network
 
-var subnet1Name
-var subnet2Name
+//Parameters
+param virtualNetworkName string
+param location string
+param subnet1Name string
+param subnet2Name string
 
+
+//Virtual Network
 
 resource virtualNetwork 'Microsoft.Network/virtualNetworks@2019-11-01' = {
   name: virtualNetworkName
@@ -30,3 +34,11 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2019-11-01' = {
     ]
   }
 }
+
+module vnetPeering 'vnet_peering.bicep'
+name: '${name}vnetDeploy'
+params: {
+  peeringName: storageAccount.name
+ 
+}
+}]
