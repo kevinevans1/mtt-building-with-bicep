@@ -8,3 +8,6 @@ Public repo hosting Microsoft Tech Talks "Building with Bicep" demo files
 https://docs.microsoft.com/en-us/azure/templates/microsoft.storage/storageaccounts/blobservices/containers?tabs=bicep
 
 
+az group create \
+    --name storage-resource-group \
+    --location eastus

@@ -1,32 +1,45 @@
-//Bicep Scope Target & Parameters
+//Azure Storage Account Manifest
 
-targetScope= 'subscription'
+//Parameters
 
-param resourceGroupName string = 'bicep-rg-02'
-param resourceGroupLocation string = 'eastus'
-param storageAccountName string = 'azbicepsta98765'
-param location string = 'eastus'
+@minLength(3)
+@maxLength(19)
+@description('storage account instance')
+param primaryLocation string = 'westeurope'
+param namePrefix string = 'storage'
+
+
+
+//Allowed Storage Account Vaules
+@allowed([
+  'Standard_LRS'
+  'Standard_GRS'
+  'Standard_RAGRS'
+  'Standard_ZRS'
+  'westeurope'
+])
+param storageSKU string = 'Standard_LRS'
+param containerNames array = [
+  '60x60'
+  '120x120'
+  'full'
+]
+
+
+var storageActName = '${namePrefix}${uniqueString(resourceGroup().id)}'
 
 
 
 
-//Azure Resource_Group Deployment//
-resource azrg01 'Microsoft.Resources/resourceGroups@2021-04-01'= {
-  name: resourceGroupName
-  location: resourceGroupLocation
-  
-}
-
-//Azure Storage Account Module Deployment//
-module storageAcct 'azure_storage_account.bicep'= {
-  name: 'storageModule'
-  scope: azrg01
-  params: {
-    location: location
-    storageAccountName: storageAccountName
-    
+module storageAccount 'azure_storage_account.bicep' ={
+  name: 'storageAccountDeploy' 
+  params:{
+    stgActName: storageActName
+    primaryLocation: primaryLocation
+    storageSKU: storageSKU
+    containerNames: containerNames
   }
-}
+} 
 
 
 
