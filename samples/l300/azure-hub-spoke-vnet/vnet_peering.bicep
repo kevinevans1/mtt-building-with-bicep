@@ -1,39 +1,47 @@
 //Azure Virtual Network
 
 //Parameters
-param virtualNetworkName string
-param location string
-param subnet1Name string
-param subnet2Name string
+param virtualNetworkPeeringName string
+param allowForwardedTraffic string
+param allowGatewayTransit string
+param allowVirtualNetworkAccess string
+param doNotVerifyRemoteGateway string
+param useRemoteGateways string
+param peeringState string
+param peeringSyncLevel string
+param addressPrefixes string
+param virtualNetworkCommunity string
+param remoteVirtualNetwork string
+param remoteVirtualNetworkAddressSpace string
 
 
 //Virtual Network Peering
 resource vnet_peering 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@2021-08-01' = {
-  name: 'string'
-  parent: resourceSymbolicName
+  name: virtualNetworkPeeringName
+  parent: //<<<<<<<<Whats this ?
   properties: {
-    allowForwardedTraffic: bool
-    allowGatewayTransit: bool
-    allowVirtualNetworkAccess: bool
-    doNotVerifyRemoteGateways: bool
-    peeringState: 'string'
-    peeringSyncLevel: 'string'
+    allowForwardedTraffic: allowForwardedTraffic
+    allowGatewayTransit: allowGatewayTransit
+    allowVirtualNetworkAccess: allowVirtualNetworkAccess
+    doNotVerifyRemoteGateways: doNotVerifyRemoteGateway
+    peeringState: peeringState
+    peeringSyncLevel: peeringSyncLevel
     remoteAddressSpace: {
       addressPrefixes: [
-        'string'
+        addressPrefixes
       ]
     }
     remoteBgpCommunities: {
-      virtualNetworkCommunity: 'string'
+      virtualNetworkCommunity: virtualNetworkCommunity
     }
     remoteVirtualNetwork: {
-      id: 'string'
+      id: remoteVirtualNetwork
     }
     remoteVirtualNetworkAddressSpace: {
       addressPrefixes: [
-        'string'
+        remoteVirtualNetworkAddressSpace
       ]
     }
-    useRemoteGateways: bool
+    useRemoteGateways: useRemoteGateways
   }
 }

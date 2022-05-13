@@ -1,7 +1,6 @@
 //Azure Storage Account Manifest
 
 //Parameters
-
 @minLength(3)
 @maxLength(19)
 @description('storage account instance')
@@ -25,13 +24,13 @@ param containerNames array = [
   'full'
 ]
 
-
+//Variables
 var storageActName = '${namePrefix}${uniqueString(resourceGroup().id)}'
 
 
 
-
-module storageAccount 'azure_storage_account.bicep' ={
+//Azure Storage Account Module
+module storageAccount 'azure_storage_account.bicep' = {
   name: 'storageAccountDeploy' 
   params:{
     stgActName: storageActName
