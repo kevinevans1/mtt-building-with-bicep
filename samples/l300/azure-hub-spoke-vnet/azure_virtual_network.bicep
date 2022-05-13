@@ -9,8 +9,6 @@ param subnet1AddressPrefix string
 param subnet2Name string
 param subnet2AddressPrefix string
 
-
-
 //Virtual Network
 resource virtualNetwork 'Microsoft.Network/virtualNetworks@2019-11-01' = {
   name: virtualNetworkName
@@ -38,6 +36,5 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2019-11-01' = {
   }
 }
 
-
-
-
+//Outputs
+output outVnetId string = virtualNetwork.id

@@ -1,44 +1,27 @@
 //Azure Hub & Spoke POC
 
-
 //Parameters
 param location string
 //Hub
-param virtualHubNetworkName string
-param vnetHubAddressSpace string //'10.0.0.0/16'
-param subnet1HubName string
-param subnet1HubAddressPrefix string //'10.0.0.0/24'
-param subnet2HubName string
-param subnet2HubAddressPrefix string //'10.0.1.0/24'
+param virtualHubNetworkName string = 'vnet-1'
+param vnetHubAddressSpace string = '10.0.0.0/16'
+param subnet1HubName string = 'subnet-1'
+param subnet1HubAddressPrefix string = '10.0.0.0/24'
+param subnet2HubName string = 'subnet-2'
+param subnet2HubAddressPrefix string = '10.0.1.0/24'
 
 //Spoke
-param virtualSpokeNetworkName string
-param vnetSpokeAddressSpace string //'10.0.7.0/16'
-param subnet1SpokeName string
-param subnet1SpokeAddressPrefix string //'10.0.7.0/24'
-param subnet2SpokeName string
-param subnet2SpokeAddressPrefix string //'10.0.8.0/24'
-
-//Peering
-param virtualNetworkPeeringName string
-param allowForwardedTraffic string
-param allowGatewayTransit string
-param allowVirtualNetworkAccess string
-param doNotVerifyRemoteGateway string
-param useRemoteGateways string
-param peeringState string
-param peeringSyncLevel string
-param addressPrefixes string
-param virtualNetworkCommunity string
-param remoteVirtualNetwork string
-param remoteVirtualNetworkAddressSpace string
-
-
+param virtualSpokeNetworkName string = 'vnet-2'
+param vnetSpokeAddressSpace string = '10.7.0.0/16'
+param subnet1SpokeName string = 'subnet-1'
+param subnet1SpokeAddressPrefix string = '10.7.0.0/24'
+param subnet2SpokeName string = 'subnet-2'
+param subnet2SpokeAddressPrefix string ='10.7.1.0/24'
 
 //Virtual Network Hub
 module virtualNetwork_hub 'azure_virtual_network.bicep' = {
   name: virtualHubNetworkName
-  params:{
+  params: {
     virtualNetworkName: virtualHubNetworkName
     location: location
     vnetAddressSpace: vnetHubAddressSpace
@@ -52,7 +35,7 @@ module virtualNetwork_hub 'azure_virtual_network.bicep' = {
 //Virtual Network Spoke
 module virtualNetwork_spoke 'azure_virtual_network.bicep' = {
   name: virtualSpokeNetworkName
-  params:{
+  params: {
     virtualNetworkName: virtualSpokeNetworkName
     location: location
     vnetAddressSpace: vnetSpokeAddressSpace
@@ -63,22 +46,20 @@ module virtualNetwork_spoke 'azure_virtual_network.bicep' = {
   }
 }
 
-//Vnet Peering
-module hubtospoke 'vnet_peering.bicep' = {
-  name: virtualNetworkPeeringName
+//Vnet Peering - Hub to Spoke
+module hubToSpoke 'vnet_peering.bicep' = {
+  name: 'peer-hub-to-spoke'
   params: {
-    virtualNetworkName: virtualHubNetworkName
-    allowForwardedTraffic: allowForwardedTraffic
-    allowGatewayTransit: allowGatewayTransit
-    allowVirtualNetworkAccess: allowVirtualNetworkAccess
-    doNotVerifyRemoteGateway: doNotVerifyRemoteGateway
-    useRemoteGateways: useRemoteGateways
-    peeringState: peeringState
-    peeringSyncLevel: peeringSyncLevel
-    addressPrefixes: addressPrefixes
-    virtualNetworkCommunity: virtualNetworkCommunity
-    remoteVirtualNetwork: remoteVirtualNetwork
-    remoteVirtualNetworkAddressSpace: remoteVirtualNetworkAddressSpace
+    sourceVnetId: virtualNetwork_hub.outputs.outVnetId
+    remoteVnetId: virtualNetwork_spoke.outputs.outVnetId
+  }
+}
 
+//Vnet Peering - Spoke to Hub
+module spokeToHub 'vnet_peering.bicep' = {
+  name: 'peer-spoke-to-hub'
+  params: {
+    sourceVnetId: virtualNetwork_spoke.outputs.outVnetId
+    remoteVnetId: virtualNetwork_hub.outputs.outVnetId
   }
 }
