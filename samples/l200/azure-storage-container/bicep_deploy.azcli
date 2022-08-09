@@ -1,0 +1,5 @@
+#Create Resource Group 1st
+az group create --name Storage-Account-POC --location "West Europe"
+
+#Run Bicep Deployment Command
+az deployment group create --resource-group Storage-Account-POC --template-file main.bicep

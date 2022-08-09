@@ -1,0 +1,5 @@
+#Create Resource Group 1st
+az group create --name Hub-Spoke-POC --location "West Europe"
+
+#Run Bicep Deployment Command
+az deployment group create --resource-group Hub-Spoke-POC --template-file main.bicep
